@@ -3,10 +3,12 @@ import os
 
 # Esta es nuestra pizarra en memoria (la lista vacía)
 tareas = []
+TODO_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'todos.csv')
 
 def add_one_task(title):
     tareas.append(title)
     print(f"✅ ¡Tarea '{title}' agregada con éxito!")
+    save_todos()
 
 def print_list():
     if len(tareas) == 0:
@@ -26,6 +28,7 @@ def delete_task(number_to_delete):
         if 0 <= indice_real < len(tareas):
             tarea_borrada = tareas.pop(indice_real)
             print(f"🗑️ Tarea '{tarea_borrada}' eliminada correctamente.")
+            save_todos()
         else:
             print("❌ Ese número de tarea no existe.")
             
@@ -33,7 +36,7 @@ def delete_task(number_to_delete):
         print("❌ Por favor, ingresa un número válido.")
 
 def save_todos():
-    with open('todos.csv', mode='w', newline='', encoding='utf-8') as archivo:
+    with open(TODO_FILE, mode='w', newline='', encoding='utf-8') as archivo:
         writer = csv.writer(archivo)
         for tarea in tareas:
             writer.writerow([tarea])
@@ -44,7 +47,7 @@ def load_todos():
     tareas.clear() 
     
     try:
-        with open('todos.csv', mode='r', encoding='utf-8') as archivo:
+        with open(TODO_FILE, mode='r', encoding='utf-8') as archivo:
             reader = csv.reader(archivo)
             for fila in reader:
                 if len(fila) > 0:
